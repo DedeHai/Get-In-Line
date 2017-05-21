@@ -23,12 +23,34 @@
 int16_t calculateLinePosition(void) {
 	int16_t lineposition;
 	static int16_t lastlineposition = 5000;
-	static uint16_t centerminvalue = 4000; //minimum value seen by central sensor
+	static int16_t calibrate_countdown = 500; //take 500 measurements to calibrate, then stop
 
-	if (sensorValues[1] < centerminvalue) {
-		centerminvalue = (4 * centerminvalue + sensorValues[1]) / 5; //use simple lowpass filter
+	static uint16_t sensorminvalue[3] = { 2000, 2000, 2000 }; //minimum value seen by each sensor (start with a high value)
+
+	//save the minimum sensorvalues and use them as a sensor calibration bias
+	uint8_t i;
+	if (calibrate_countdown) //only calibrate at the beginning
+	{
+		if (sensorValues[0] < 3400 && sensorValues[1] < 3400
+				&& sensorValues[2] < 3400) { //if actually on the ground in a whiteish environment
+			for (i = 0; i < 3; i++) {
+				if (sensorValues[i] < sensorminvalue[i]) {
+					sensorminvalue[i] =
+							(8 * sensorminvalue[i] + (uint16_t)sensorValues[i]) / 9; //use simple lowpass filter
+				}
+				//calibrate the sensor value (deduct the minimum value, sensorvalue must never be negative!)
+				//sensorValues[i]=((uint32_t)sensorValues[i]<<10)/ sensorminvalue[i];
+
+			}
+			calibrate_countdown--;
+		}
 	}
-
+	//apply calibration data
+	for (i = 0; i < 3; i++) {
+	sensorValues[i] -= sensorminvalue[i];
+	if (sensorValues[i] < 0)
+		sensorValues[i] = 0;
+	}
 	//the line position is the weighted average of the sensor values:
 	//weighted with the position, position of the left sensor is taken as 'SENSORSPACING' since 0 is not a good idea
 
@@ -42,35 +64,40 @@ int16_t calculateLinePosition(void) {
 	//now we have the weighted average of the position but with an offset (zero position is one SENSORSPACING to the left of the left sensor)
 	//deduct two SENSORSPACINGS to offset to the center position
 	lineposition = (int32_t) weightedavg - 2 * (int32_t) SENSORSPACING;
+	/*
+	 //if line position error is small, check if line is moving out of sight
+	 if (lineposition < 1000 && lineposition > -1000) {
+	 if (sensorValues[1] - sensorminvalue[1] < 1000) //line is out of sight from the central sensor
+	 {
+	 if (lineposition < 300 && lineposition > -300) {
+	 lineposition_state = POSITION_BAD; //completely out of sight
+	 lineposition = lastlineposition;
+	 } else if (lineposition_state != POSITION_BAD) { //cannot go from bad to critical
+	 lineposition_state = POSITION_CRITICAL; //line is on the outer edge of field of view
+	 if (lineposition > 0)
+	 lineposition = SENSORSPACING / 2;
+	 else
+	 lineposition = -SENSORSPACING / 2;
 
-	//if line position error is small, check if line is moving out of sight
-	if (lineposition < 1000 && lineposition > -1000) {
-		if (sensorValues[1] - centerminvalue < 1000) //line is out of sight from the central sensor
-				{
-			if (lineposition < 300 && lineposition > -300) {
-				lineposition_state = POSITION_BAD;
-				lineposition = lastlineposition;
-			} else if(lineposition_state != POSITION_BAD) { //cannot go from bad to critical
-				lineposition_state = POSITION_CRITICAL;
-				if (lineposition > 0)
-					lineposition = SENSORSPACING/2;
-				else
-					lineposition = -SENSORSPACING/2;
+	 lastlineposition = lineposition;
+	 }
+	 }
+	 } else //if position error is big, the line is in sight
+	 {
+	 lineposition_state = POSITION_OK;
+	 lastlineposition = lineposition;
+	 }*/
+	//if sum of all sensor values is small, we lost sight of the line
+	if (sensorValues[0] + sensorValues[1] + sensorValues[2] < 1400) {
+		lineposition_state = POSITION_BAD; //completely out of sight
+		if(lastlineposition>0)lineposition = SENSORSPACING / 2;
+		else lineposition = -SENSORSPACING / 2;
 
-				lastlineposition = lineposition;
-			}
-
-		} else {
-			//	lineposition_state = POSITION_OK;
-		}
-	} else //if position error is big, the line is in sight
+	} else //if at least one sensor shows a high value, there is a line
 	{
 		lineposition_state = POSITION_OK;
 		lastlineposition = lineposition;
 	}
-
-
-
 	return lineposition;
 }
 
@@ -100,15 +127,14 @@ int32_t PIDregulator(int16_t error) {
 		integratederror = ANTIWINDUP_MAX;
 	if (integratederror < -ANTIWINDUP_MAX)
 		integratederror = -ANTIWINDUP_MAX;
-/*
-	//reset the integrated error when crossing the center
-	if ((lasterror > 0 && error < 0) || (lasterror < 0 && error > 0))
+	/*
+	 //reset the integrated error when crossing the center
+	 if ((lasterror > 0 && error < 0) || (lasterror < 0 && error > 0))
+	 integratederror = 0;
+	 */
+	if (lineposition_state == POSITION_OK) {
 		integratederror = 0;
-*/
-	if(lineposition_state == POSITION_OK)
-		{
-			integratederror = 0;
-		}
+	}
 
 	/*
 	 //bring the integrated error back to zero over time (damping)
@@ -118,7 +144,7 @@ int32_t PIDregulator(int16_t error) {
 	 integratederror += 15;
 	 */
 	//calculate the differential
-	differential = (differential + (lasterror - error)) /2;
+	differential = (differential + (lasterror - error)) / 2;
 	//use a lowpass to even out spikes in readings: output = (x * last_output + present_reading) / (x+1)
 	//differentiallowpass = ((7*differentiallowpass)+(int32_t (lasterror - error)))>>3;
 
@@ -129,10 +155,10 @@ int32_t PIDregulator(int16_t error) {
 	//if(error < 0) P = -P;
 	//I = (int32_t) (potentiometers[1]<<5) * integratederror;
 	//D = (int32_t) (potentiometers[2]<<2) * differential;
-	P = (int32_t) potentiometers[0] * error;
+	P = (int32_t) (potentiometers[0]>>1) * error;
 	//if(error < 0) P = -P;
 	I = (int32_t) (potentiometers[1] >> 2) * integratederror;
-	D = (int32_t) (potentiometers[2] >> 1) * differential;
+	D = (int32_t) (potentiometers[2] >> 2) * differential;
 	//D = 0;
 
 	//I=0;
