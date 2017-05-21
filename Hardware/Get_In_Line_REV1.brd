@@ -6,23 +6,23 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="1" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="mm" altunit="mm"/>
+<grid distance="0.1" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="mm" altunit="mm"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
@@ -39,7 +39,7 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
@@ -267,7 +267,7 @@
 <wire x1="31.82" y1="36.72" x2="31.32" y2="36.72" width="0.05" layer="20"/>
 <wire x1="30.52" y1="32.52" x2="31.22" y2="32.92" width="0.05" layer="20" curve="56.310006"/>
 <wire x1="31.82" y1="32.92" x2="31.22" y2="32.92" width="0.05" layer="20"/>
-<text x="11.096" y="44.952" size="1.27" layer="25" font="vector" ratio="20">DEBUG</text>
+<text x="11.896" y="44.702" size="1.016" layer="25" font="vector" ratio="20">DEBUG</text>
 <text x="8.75" y="10.6" size="0.8128" layer="26" font="vector" ratio="21" rot="MR35">27. JAN 2017</text>
 <text x="3.4" y="15" size="0.9" layer="25" font="vector" ratio="21" rot="R315">Bäschteler</text>
 <text x="7.72" y="10.06" size="0.9" layer="25" font="vector" ratio="21" rot="R135">Design</text>
@@ -2304,7 +2304,13 @@ Winterthur</text>
 <wire x1="0" y1="32.4" x2="0.4" y2="42.7" width="0.05" layer="20" curve="-8.616611"/>
 <wire x1="0.4" y1="42.7" x2="3.8" y2="47.5" width="0.05" layer="20" curve="-57.479638"/>
 <text x="3.55" y="37.29" size="0.8128" layer="26" font="vector" ratio="21" rot="MR0">OSH</text>
-<text x="8.05" y="24.05" size="1.016" layer="25" font="vector" ratio="22" rot="SR90">BASHTELOROFSCIENCE</text>
+<text x="7.9" y="24.9" size="1.016" layer="25" font="vector" ratio="22" rot="SR90">BASHTELOROFSCIENCE.
+    WORDPRESS.COM</text>
+<text x="7.85" y="46.1" size="0.8128" layer="25" font="vector" ratio="22">3V3</text>
+<text x="10.5" y="46.1" size="0.8128" layer="25" font="vector" ratio="22">GND</text>
+<text x="13.1" y="46.15" size="0.8128" layer="25" font="vector" ratio="22">SWC</text>
+<text x="15.65" y="46.15" size="0.8128" layer="25" font="vector" ratio="22">SWD</text>
+<text x="18.45" y="46.1" size="0.8128" layer="25" font="vector" ratio="22">NRST</text>
 </plain>
 <libraries>
 <library name="fairchild_optosensor">
@@ -4739,11 +4745,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="14" y1="13.1" x2="14" y2="9.976" width="0.4064" layer="16"/>
 <wire x1="21.5" y1="31.1" x2="22.5" y2="32.1" width="0.254" layer="16"/>
 <wire x1="22.5" y1="32.1" x2="22.5" y2="34.05" width="0.254" layer="16"/>
-<wire x1="10.7" y1="17.5" x2="10.7" y2="18.701" width="0.254" layer="16"/>
+<wire x1="10.7" y1="17.5" x2="10.7" y2="18.701" width="0.4064" layer="16"/>
 <wire x1="10.7" y1="18.701" x2="10.795" y2="18.796" width="0.254" layer="16"/>
 <via x="10.795" y="18.796" extent="1-16" drill="0.3048"/>
 <via x="9.906" y="27.94" extent="1-16" drill="0.3048"/>
-<wire x1="9.906" y1="27.94" x2="11.09" y2="27.94" width="0.254" layer="16"/>
+<wire x1="9.906" y1="27.94" x2="11.09" y2="27.94" width="0.4064" layer="16"/>
 <wire x1="11.09" y1="27.94" x2="11.15" y2="28.254" width="0.254" layer="16"/>
 <wire x1="21.5" y1="31.1" x2="19.797" y2="31.1" width="0.254" layer="16"/>
 <wire x1="19.797" y1="31.1" x2="19.177" y2="30.48" width="0.254" layer="16"/>
@@ -4752,11 +4758,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="19.177" y1="28.321" x2="19.685" y2="27.813" width="0.254" layer="1"/>
 <wire x1="19.685" y1="27.813" x2="19.685" y2="26.162" width="0.254" layer="1"/>
 <wire x1="19.685" y1="26.162" x2="18.542" y2="25.019" width="0.254" layer="1"/>
-<wire x1="18.542" y1="25.019" x2="11.049" y2="25.019" width="0.254" layer="1"/>
-<wire x1="11.049" y1="25.019" x2="9.906" y2="26.162" width="0.254" layer="1"/>
-<wire x1="9.906" y1="26.162" x2="9.906" y2="27.94" width="0.254" layer="1"/>
-<wire x1="10.795" y1="18.796" x2="10.795" y2="24.765" width="0.254" layer="1"/>
-<wire x1="10.795" y1="24.765" x2="11.049" y2="25.019" width="0.254" layer="1"/>
+<wire x1="18.542" y1="25.019" x2="10.749" y2="25.019" width="0.254" layer="1"/>
+<wire x1="10.749" y1="25.019" x2="9.906" y2="26.162" width="0.4064" layer="1"/>
+<wire x1="9.906" y1="26.162" x2="9.906" y2="27.94" width="0.4064" layer="1"/>
+<wire x1="10.795" y1="18.796" x2="10.795" y2="24.765" width="0.4064" layer="1"/>
+<wire x1="10.795" y1="24.765" x2="10.749" y2="25.019" width="0.4064" layer="1"/>
 <wire x1="9.052" y1="15.694" x2="9.8774" y2="15.694" width="0.4064" layer="16"/>
 <wire x1="9.8774" y1="15.694" x2="10.668" y2="16.4846" width="0.4064" layer="16"/>
 <wire x1="10.668" y1="16.4846" x2="10.668" y2="17.468" width="0.4064" layer="16"/>
